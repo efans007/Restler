@@ -107,7 +107,7 @@ class JsonFormat extends Format
             }
         }
         $decoded = json_decode($data, $options);
-        if (function_exists('json_last_error')) {
+        if (function_exists('json_last_error') && $data !== '') {
             switch (json_last_error()) {
                 case JSON_ERROR_NONE :
                     return Object::toArray($decoded);

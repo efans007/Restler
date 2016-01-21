@@ -20,7 +20,7 @@ use XMLWriter;
  */
 class XmlFormat extends Format
 {
-    const MIME = 'application/xml';
+    const MIME = 'text/xml';
     const EXTENSION = 'xml';
 
     // ==================================================================

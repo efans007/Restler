@@ -85,6 +85,14 @@ class RestException extends Exception
             $this->stage = $previous ? $events[count($events)-2] : end($events);
         }
         $this->details = $details;
+        if ( $httpStatusCode >= 500 ) {
+                ob_start(); 
+                debug_print_backtrace();
+                $trace = ob_get_contents();
+                ob_end_clean();
+                $error = "$httpStatusCode - $errorMessage\n$trace";
+                error_log($error, E_USER_ERROR);
+        }
         parent::__construct($errorMessage, $httpStatusCode, $previous);
     }
 
@@ -117,10 +125,12 @@ class RestException extends Exception
     {
         $statusCode = $this->getCode();
         $message = $this->getMessage();
+        /*
         if (isset(RestException::$codes[$statusCode])) {
             $message = RestException::$codes[$statusCode] .
                 (empty($message) ? '' : ': ' . $message);
         }
+        */
         return $message;
     }
 

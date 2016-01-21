@@ -2,7 +2,7 @@
 namespace Luracast\Restler;
 
 use Luracast\Restler\Data\ApiMethodInfo;
-use Luracast\Restler\Data\String;
+use Luracast\Restler\Data\Text;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -279,6 +279,7 @@ class Routes
                 }
                 if (empty($pathParams) || $allowAmbiguity) {
                     static::addPath($url, $call, $httpMethod, $version);
+//static::addPath($url, $call, 'POST', $version);
                 }
                 foreach ($pathParams as $position) {
                     if (!empty($url))
@@ -386,6 +387,7 @@ class Routes
         //if double slash is found fill in newline char;
         $path = str_replace('//', '/' . PHP_EOL . '/', $path);
         ksort($p);
+
         foreach ($p as $key => $value) {
             if (!isset($value[$httpMethod])) {
                 continue;
@@ -551,7 +553,7 @@ class Routes
                 $name = $prop->getName();
                 $child = array('name' => $name);
                 if ($c = $prop->getDocComment()) {
-                    $child += Util::nestedValue(CommentParser::parse($c), 'var') ?: array();
+                    $child += Util::nestedValue(CommentParser::parse($c), 'var') ?: [];
                 } else {
                     $o = $class->newInstance();
                     $p = $prop->getValue($o);
@@ -587,7 +589,7 @@ class Routes
                 $children[$name] = $child;
             }
         } catch (Exception $e) {
-            if (String::endsWith($e->getFile(), 'CommentParser.php')) {
+            if (Text::endsWith($e->getFile(), 'CommentParser.php')) {
                 throw new RestException(500, "Error while parsing comments of `$className` class. " . $e->getMessage());
             }
             throw $e;
